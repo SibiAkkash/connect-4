@@ -1,13 +1,48 @@
 #include <iostream>
 #include <vector>
-#include "Board.h"
+#include "Game.h"
+
 using namespace std;
 
-int main() {
+Game::Game()
+{
 	Board board;
-	board.makeMove(3, 1);
-	board.makeMove(3, 2);
-	board.makeMove(3, 2);
-	board.showBoard();
+	this->currentPlayer = 1;
+	this->gameOver = false;
+	this->loop();
+}
+
+void Game::togglePlayer()
+{
+	this->currentPlayer = this->currentPlayer == 1 ? 2 : 1;
+}
+
+// 1. Get move from current player
+// 2. send to board, get win result
+// continue/stop loop
+void Game::loop()
+{
+	while (!this->gameOver)
+	{
+		int move;
+		cout << "Player " << this->currentPlayer << ": ";
+		cin >> move;
+		int win = board.makeMove(move, this->currentPlayer);
+		this->gameOver = win;
+		if (this->gameOver)
+		{
+			winner = this->currentPlayer;
+		}
+		else
+		{
+			this->togglePlayer();
+		}
+	}
+	cout << "Player " << winner << " won" << endl;
+}
+
+int main()
+{
+	Game g;
 	return 0;
 }

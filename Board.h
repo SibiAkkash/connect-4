@@ -8,18 +8,21 @@ class Board
 {
     const int ROWS = 6;
     const int COLS = 7;
-    std::vector<std::vector<int>> board;
+    vector<vector<int>> board;
 
 public:
     Board();
     void showBoard();
-    void makeMove(int col, char player);
+    int makeMove(int col, int player);
 
 private:
-    bool checkColumn(int row, int col, char player);
-    bool checkRow(int row, int col, char player);
-    bool checkDiagonals(int row, int col, char player);
-    bool checkWin(int row, int col, char player);
+    bool isWithinBoundaries(int row, int col);
+    bool checkColumn(int row, int col, int player);
+    bool checkRow(int row, int col, int player);
+    bool checkDiagonals(int row, int col, int player);
+    bool checkWin(int row, int col, int player);
+    bool canCheckCell(pair<int, int> cell, int player);
+
 };
 
 #endif
