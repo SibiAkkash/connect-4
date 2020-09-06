@@ -13,9 +13,9 @@ class Board
 public:
     Board();
     void showBoard();
+    void makeMove(int col, char player);
 
 private:
-    void makeMove(int row, int col, char player);
     bool checkColumn(int row, int col, char player);
     bool checkRow(int row, int col, char player);
     bool checkDiagonals(int row, int col, char player);

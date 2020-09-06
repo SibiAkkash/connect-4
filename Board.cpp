@@ -21,28 +21,26 @@ void Board::showBoard()
     }
 }
 
-void Board::makeMove(int row, int col, char player)
+void Board::makeMove(int col, char player)
 {
     // check row, col, player, cell occupancy
-    if (row < 0 && row >= this->ROWS)
+    if (col < 0 && col >= this->COLS)
     {
-        cout << "Row out of bounds";
-    }
-    else if (col < 0 && col >= this->COLS)
-    {
-        cout << "Col out of bounds";
+        cout << "Col out of bounds" << endl;
     }
     else if (player != 1 && player != 2)
     {
-        cout << "Invalid player";
+        cout << "Invalid player" << endl;
     }
-    else if (board[row][col])
+    else if (board[0][col])
     {
-        cout << "Cell is already full";
+        cout << "Column is already full" << endl;
     }
     else
     {
-        board[row][col] = player;
+        int row = 0;
+        while (row < this->ROWS && !board[row][col]) row++; 
+        board[row - 1][col] = player;
     }
 }
 
