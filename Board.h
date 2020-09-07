@@ -62,7 +62,6 @@ private:
      * @return if cell at (`row`, `col`) == player
     */
     bool isPlayerCell(pair<int, int> cell, int player);
-
 };
 
 #endif

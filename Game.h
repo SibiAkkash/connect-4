@@ -3,15 +3,18 @@
 
 #include "Board.h"
 
-class Game {
+class Game
+{
     int currentPlayer;
     Board board;
     int winner;
     bool gameOver;
+
 public:
     // init board object, player
     Game();
     void loop();
+
 private:
     void togglePlayer();
 };
