@@ -33,25 +33,17 @@ void Board::showBoard()
     }
 }
 
-bool Board::isWithinBoundaries(int row, int col)
+bool Board::isCellWithinBoundaries(int row, int col)
 {
     return row >= 0 && row < this->ROWS && col >= 0 && col < this->COLS;
 }
 
-bool Board::canCheckCell(pair<int, int> cell, int player)
+bool Board::isPlayerCell(pair<int, int> cell, int player)
 {
-    if (!this->isWithinBoundaries(cell.first, cell.second))
-    {
-        return false;
-    }
-    return this->board[cell.first][cell.second] == player;
+    return this->isCellWithinBoundaries(cell.first, cell.second) &&
+           this->board[cell.first][cell.second] == player;
 }
 
-/**
- * @param col Column index of move
- * @param player symbol of player making the move
- * @return player symbol if win else 0
-*/
 int Board::makeMove(int col, int player)
 {
     int row = 0;
@@ -80,12 +72,7 @@ int Board::makeMove(int col, int player)
     return this->checkWin(row - 1, col, player) ? player : 0;
 }
 
-/**
- * @param row Row index of move
- * @param col Column index of move
- * @param player symbol of player making the move
- * @return win (bool)
-*/
+
 bool Board::checkColumn(int row, int col, int player)
 {
     // columns -> check the 3 coins below the current cell
@@ -113,8 +100,8 @@ bool Board::checkRow(int row, int col, int player)
 
     while (left >= 0 || right < this->COLS)
     {
-        canCheckLeft = this->canCheckCell(pair<int, int>(row, left), player);
-        canCheckRight = this->canCheckCell(pair<int, int>(row, right), player);
+        canCheckLeft = this->isPlayerCell(pair<int, int>(row, left), player);
+        canCheckRight = this->isPlayerCell(pair<int, int>(row, right), player);
         if (canCheckLeft)
         {
             left--;
@@ -158,10 +145,10 @@ bool Board::checkDiagonals(int row, int col, int player)
            (topRight.first >= 0 && topRight.second < this->COLS) ||
            (bottomLeft.first < this->ROWS && bottomLeft.second >= 0))
     {
-        topLeftDone = this->canCheckCell(topLeft, player);
-        bottomRightDone = this->canCheckCell(bottomRight, player);
-        topRightDone = this->canCheckCell(topRight, player);
-        bottomLeftDone = this->canCheckCell(bottomLeft, player);
+        topLeftDone = this->isPlayerCell(topLeft, player);
+        bottomRightDone = this->isPlayerCell(bottomRight, player);
+        topRightDone = this->isPlayerCell(topRight, player);
+        bottomLeftDone = this->isPlayerCell(bottomLeft, player);
 
         if (topLeftDone)
         {

@@ -17,9 +17,11 @@ void Game::togglePlayer()
 	this->currentPlayer = this->currentPlayer == 1 ? 2 : 1;
 }
 
-// 1. Get move from current player
-// 2. send to board, get win result
-// continue/stop loop
+/**
+ * Get move from current player
+ * send to board, get win result
+ * continue/stop loop
+*/
 void Game::loop()
 {
 	while (!this->gameOver)
@@ -27,8 +29,7 @@ void Game::loop()
 		int move;
 		cout << "Player " << this->currentPlayer << ": ";
 		cin >> move;
-		int win = board.makeMove(move, this->currentPlayer);
-		this->gameOver = win;
+		this->gameOver = board.makeMove(move, this->currentPlayer);
 		if (this->gameOver)
 		{
 			winner = this->currentPlayer;
