@@ -13,8 +13,9 @@ class Game
 public:
     // init board object, player
     Game();
+    // game loop
     void loop();
-    int findBestMove();
+    void start();
 
 private:
     void togglePlayer();

@@ -9,6 +9,7 @@ class Board
     const int ROWS = 6;
     const int COLS = 7;
     vector<vector<int>> board;
+    vector<pair<int, int>> moves;
 
 public:
     Board();
@@ -19,9 +20,19 @@ public:
      * @return player symbol if win else 0
     */
     int makeMove(int col, int player);
+
+    void undoMove();
+    
     int evalBoard();
 
+    int findBestMove();
+
 private:
+    pair<int, int> prevMove;
+
+    int minimax(int currDepth, int maxDepth, bool isMaximizingPlayer, int player, int tabs);
+
+
     /**
      * @param row Row index of move
      * @param col Column index of move
