@@ -23,8 +23,8 @@ public:
 
     void undoMove();
     
-    int evalBoard();
-
+    int evaluateBoard();
+    
     int findBestMove();
 
 private:

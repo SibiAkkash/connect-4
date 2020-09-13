@@ -68,7 +68,7 @@ int Board::makeMove(int col, int player)
         }
         row--;
         board[row][col] = player;
-    }
+    } 
     // append to moves list
     this->moves.push_back(pair<int, int>(row, col));
     // return win ?
@@ -202,6 +202,15 @@ bool Board::checkWin(int row, int col, int player)
     return this->checkColumn(row, col, player) || this->checkRow(row, col, player) || this->checkDiagonals(row, col, player);
 }
 
+/**
+ ** Can we remove this findBestMove function
+ ** 
+ *  
+*/
+
+
+
+
 int Board::findBestMove()
 {
     int bestCol = 0;
@@ -212,7 +221,7 @@ int Board::findBestMove()
     int player = 2; // AI id
     for (int i = 0; i < this->COLS; i++)
     {
-        // check whether col is empty
+        // can we play in this column ?
         bool isColumnEmpty = board[0][i] == 0;
         if (isColumnEmpty)
         {
@@ -235,18 +244,18 @@ int Board::findBestMove()
 
 int Board::minimax(int currDepth, int maxDepth, bool isMaximizingPlayer, int player, int tabs)
 {
-    // evaluate board for leaf nodes
     if (currDepth == maxDepth)
     {
         for(int i = 0; i < tabs; i++) cout << "\t";
-        // cout << "leaf node, evalutaing board....." << "\t";
-        return this->evalBoard();
+        return this->evaluateBoard();
     }
+
     int nextPlayer = player == 1 ? 2 : 1;
     if (isMaximizingPlayer)
     {
         int bestScore = INT_MIN;
         for(int i = 0; i < this->COLS; i++) {
+            // can we play in this column ?
             bool isColumnEmpty = board[0][i] == 0;
             if(isColumnEmpty) {
                 // simulate move in each column
@@ -272,6 +281,7 @@ int Board::minimax(int currDepth, int maxDepth, bool isMaximizingPlayer, int pla
     {
         int bestScore = INT_MAX;
         for(int i = 0; i < this->COLS; i++) {
+            // can we play in this column ?
             bool isColumnEmpty = board[0][i] == 0;
             if(isColumnEmpty) {
                 // simulate move in each column
@@ -290,13 +300,12 @@ int Board::minimax(int currDepth, int maxDepth, bool isMaximizingPlayer, int pla
                 this->undoMove();
             }
         }
-        cout << endl << endl;
         return bestScore;
     }
 }
 
-int Board::evalBoard()
+int Board::evaluateBoard()
 {
-
+    
     return rand() % (7);
 }
