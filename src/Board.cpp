@@ -9,6 +9,12 @@ Board::Board()
     board.resize(this->ROWS, vector<int>(this->COLS, 0));
 }
 
+int Board::getCols() { return this->COLS; }
+
+int Board::getRows() { return this->ROWS; }
+
+bool Board::isColumnEmpty(int col) { return this->board[0][col] == 0; }
+
 void Board::showBoard()
 {
     for (int i = 0; i < this->ROWS; i++)
@@ -68,13 +74,12 @@ int Board::makeMove(int col, int player)
         }
         row--;
         board[row][col] = player;
-    } 
+    }
     // append to moves list
     this->moves.push_back(pair<int, int>(row, col));
     // return win ?
     return this->checkWin(row, col, player) ? player : 0;
 }
-
 
 void Board::undoMove()
 {
@@ -88,7 +93,7 @@ void Board::undoMove()
     this->moves.pop_back();
 }
 
-bool Board::checkColumn(int row, int col, int player)
+bool Board::checkColumnWin(int row, int col, int player)
 {
     if (row <= 2 &&
         board[row + 1][col] == player &&
@@ -100,7 +105,7 @@ bool Board::checkColumn(int row, int col, int player)
     return false;
 }
 
-bool Board::checkRow(int row, int col, int player)
+bool Board::checkRowWin(int row, int col, int player)
 {
     // check whether there are 4 consecutive coins of the same player as part of the current move
     // Eg: OXX(X)OXX -> not a win
@@ -133,7 +138,7 @@ bool Board::checkRow(int row, int col, int player)
     return count >= 4;
 }
 
-bool Board::checkDiagonals(int row, int col, int player)
+bool Board::checkDiagonalsWin(int row, int col, int player)
 {
     /* 
         X   -   X   -   X
@@ -199,113 +204,12 @@ bool Board::checkDiagonals(int row, int col, int player)
 
 bool Board::checkWin(int row, int col, int player)
 {
-    return this->checkColumn(row, col, player) || this->checkRow(row, col, player) || this->checkDiagonals(row, col, player);
+    return this->checkColumnWin(row, col, player) ||
+           this->checkRowWin(row, col, player) ||
+           this->checkDiagonalsWin(row, col, player);
 }
 
-/**
- ** Can we remove this findBestMove function
- ** 
- *  
-*/
-
-
-
-
-int Board::findBestMove()
+int Board::evaluateBoard(int player)
 {
-    int bestCol = 0;
-    int bestScore = INT_MIN;
-    int maxDepth = 2;
-    // for all possible moves, get score from minmax
-    // if score > bestScore, update bestScore and bestCol
-    int player = 2; // AI id
-    for (int i = 0; i < this->COLS; i++)
-    {
-        // can we play in this column ?
-        bool isColumnEmpty = board[0][i] == 0;
-        if (isColumnEmpty)
-        {
-            // make move in the col
-            this->makeMove(i, player);
-            // get score
-            int score = this->minimax(1, maxDepth, false, player, 0);
-            // update score
-            if (score > bestScore)
-            {
-                bestScore = score;
-                bestCol = i;
-            }
-            // undo move
-            this->undoMove();
-        }
-    }
-    return bestCol;
-}
-
-int Board::minimax(int currDepth, int maxDepth, bool isMaximizingPlayer, int player, int tabs)
-{
-    if (currDepth == maxDepth)
-    {
-        for(int i = 0; i < tabs; i++) cout << "\t";
-        return this->evaluateBoard();
-    }
-
-    int nextPlayer = player == 1 ? 2 : 1;
-    if (isMaximizingPlayer)
-    {
-        int bestScore = INT_MIN;
-        for(int i = 0; i < this->COLS; i++) {
-            // can we play in this column ?
-            bool isColumnEmpty = board[0][i] == 0;
-            if(isColumnEmpty) {
-                // simulate move in each column
-                this->makeMove(i, player);
-                // get score
-                int score = this->minimax(currDepth + 1, maxDepth, false, nextPlayer, tabs+1);
-                // update score
-                bestScore = max(bestScore, score);
-
-
-                for(int i = 0; i < tabs; i++) cout << "\t";
-                cout << "max player " << score << " " << bestScore << endl;
-
-
-                // undo move
-                this->undoMove();
-
-            }
-        }
-        return bestScore;
-    }
-    else
-    {
-        int bestScore = INT_MAX;
-        for(int i = 0; i < this->COLS; i++) {
-            // can we play in this column ?
-            bool isColumnEmpty = board[0][i] == 0;
-            if(isColumnEmpty) {
-                // simulate move in each column
-                this->makeMove(i, player);
-                // get score
-                int score = this->minimax(currDepth + 1, maxDepth, true, nextPlayer, tabs+1);
-                // update score
-                bestScore = min(bestScore, score);
-
-
-                for(int i = 0; i < tabs; i++) cout << "\t";
-                cout << "min player " << score << " " << bestScore << endl;
-
-
-                // undo move
-                this->undoMove();
-            }
-        }
-        return bestScore;
-    }
-}
-
-int Board::evaluateBoard()
-{
-    
-    return rand() % (7);
+    return rand() % 10;
 }

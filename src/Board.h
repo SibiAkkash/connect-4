@@ -13,6 +13,9 @@ class Board
 
 public:
     Board();
+    int getCols();
+    int getRows();
+    bool isColumnEmpty(int col);
     void showBoard();
     /**
      * @param col Column index of move
@@ -20,19 +23,13 @@ public:
      * @return player symbol if win else 0
     */
     int makeMove(int col, int player);
-
     void undoMove();
-    
-    int evaluateBoard();
-    
-    int findBestMove();
+    /**
+     * @param player player symbol
+    */
+    int evaluateBoard(int player);
 
 private:
-    pair<int, int> prevMove;
-
-    int minimax(int currDepth, int maxDepth, bool isMaximizingPlayer, int player, int tabs);
-
-
     /**
      * @param row Row index of move
      * @param col Column index of move
@@ -45,21 +42,21 @@ private:
      * @param player symbol of player making the move
      * @return column win
     */
-    bool checkColumn(int row, int col, int player);
+    bool checkColumnWin(int row, int col, int player);
     /**
      * @param row Row index of move
      * @param col Column index of move
      * @param player symbol of player making the move
      * @return row win
     */
-    bool checkRow(int row, int col, int player);
+    bool checkRowWin(int row, int col, int player);
     /**
      * @param row Row index of move
      * @param col Column index of move
      * @param player symbol of player making the move
      * @return diagonals win
     */
-    bool checkDiagonals(int row, int col, int player);
+    bool checkDiagonalsWin(int row, int col, int player);
     /**
      * @param row Row index of move
      * @param col Column index of move

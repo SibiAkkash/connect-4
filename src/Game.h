@@ -16,9 +16,18 @@ public:
     // game loop
     void loop();
     void start();
+    int findBestMove();
 
 private:
     void togglePlayer();
+    /**
+     * @param depth Current lookahead depth
+     * @param maxDepth max lookahead depth
+     * @param isMaximizingPlayer max player or not
+     * @param player player symbol
+     * @return player symbol if win else 0
+    */
+    int minimax(int depth, int maxDepth, bool isMaximizingPlayer, int player);
 };
 
 #endif
