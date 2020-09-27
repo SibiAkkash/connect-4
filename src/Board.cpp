@@ -93,114 +93,63 @@ void Board::undoMove()
     this->moves.pop_back();
 }
 
+int Board::checkSlice(int row, int col, pair<int, int> incr)
+{
+    // check for contiguous block of 4 from cell(row, col) in slice
+    int count = 0;
+    int prev = board[row][col];
+    // next cell
+    row += incr.first;
+    col += incr.second;
+    while (isCellWithinBoundaries(row, col))
+    {
+        if (board[row][col] == prev)
+        {
+            count++;
+            prev = board[row][col];
+            // next cell
+            row += incr.first;
+            col += incr.second;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return count;
+}
+
 bool Board::checkColumnWin(int row, int col, int player)
 {
-    if (row <= 2 &&
-        board[row + 1][col] == player &&
-        board[row + 2][col] == player &&
-        board[row + 3][col] == player)
-    {
-        return true;
-    }
-    return false;
+    int colTotal = checkSlice(row, col, pair<int, int>(1, 0)) + 1;
+    return colTotal == 4;
 }
 
 bool Board::checkRowWin(int row, int col, int player)
 {
-    // check whether there are 4 consecutive coins of the same player as part of the current move
     // Eg: OXX(X)OXX -> not a win
     // Eg: OOX(X)XXO -> win
-    int left = col - 1;
-    int right = col + 1;
-    int count = 1; // one is the current move
-    bool canCheckLeft = false;
-    bool canCheckRight = false;
-
-    while (left >= 0 || right < this->COLS)
-    {
-        canCheckLeft = this->isPlayerCell(pair<int, int>(row, left), player);
-        canCheckRight = this->isPlayerCell(pair<int, int>(row, right), player);
-        if (canCheckLeft)
-        {
-            left--;
-            count++;
-        }
-        if (canCheckRight)
-        {
-            right++;
-            count++;
-        }
-        if (count >= 4 || (!canCheckLeft && !canCheckRight))
-        {
-            break;
-        }
-    }
-    return count >= 4;
+    int left = checkSlice(row, col, pair<int, int>(0, -1));
+    int right = checkSlice(row, col, pair<int, int>(0, 1));
+    // win condition
+    return left + 1 + right >= 4;
 }
 
-bool Board::checkDiagonalsWin(int row, int col, int player)
-{
-    /* 
-        X   -   X   -   X
-        O   X   X   X   O
-        O   O  (X)  O   X
-        O   O   O   X   O
-    */
-    int mainCount = 1;
-    int oppCount = 1;
-    pair<int, int> topLeft(row - 1, col - 1);
-    pair<int, int> bottomRight(row + 1, col + 1);
-    pair<int, int> topRight(row - 1, col + 1);
-    pair<int, int> bottomLeft(row + 1, col - 1);
-    bool topLeftDone = false;
-    bool bottomRightDone = false;
-    bool topRightDone = false;
-    bool bottomLeftDone = false;
-
-    while ((topLeft.first >= 0 && topLeft.second >= 0) ||
-           (bottomRight.first < this->ROWS && bottomRight.second < this->COLS) ||
-           (topRight.first >= 0 && topRight.second < this->COLS) ||
-           (bottomLeft.first < this->ROWS && bottomLeft.second >= 0))
-    {
-        topLeftDone = this->isPlayerCell(topLeft, player);
-        bottomRightDone = this->isPlayerCell(bottomRight, player);
-        topRightDone = this->isPlayerCell(topRight, player);
-        bottomLeftDone = this->isPlayerCell(bottomLeft, player);
-
-        if (topLeftDone)
-        {
-            topLeft.first--;
-            topLeft.second--;
-            mainCount++;
-        }
-        if (bottomRightDone)
-        {
-            bottomRight.first++;
-            bottomRight.second++;
-            mainCount++;
-        }
-        if (topRightDone)
-        {
-            topRight.first--;
-            topRight.second++;
-            oppCount++;
-        }
-        if (bottomLeftDone)
-        {
-            bottomLeft.first++;
-            bottomLeft.second--;
-            oppCount++;
-        }
-
-        if (mainCount >= 4 ||
-            oppCount >= 4 ||
-            (!topLeftDone && !bottomRightDone && !topRightDone && !bottomLeftDone))
-        {
-            break;
-        }
-    }
-    return mainCount >= 4 || oppCount >= 4;
+bool Board::checkDiagonalsWin(int row, int col, int player) {
+    // diag1
+    int topRight = checkSlice(row, col, pair<int, int>(-1, 1));
+    int bottomLeft = checkSlice(row, col, pair<int, int>(1, -1));
+    // diag2
+    int topLeft = checkSlice(row, col, pair<int, int>(-1, -1));
+    int bottomRight = checkSlice(row, col, pair<int, int>(1, 1));
+    // no of consec player coins in diagonals
+    int diag1 = bottomLeft + 1 + topRight;
+    int diag2 = topLeft + 1 + bottomRight;
+    // win condition
+    return diag1 >= 4 || diag2 >= 4;
 }
+
+
 
 bool Board::checkWin(int row, int col, int player)
 {

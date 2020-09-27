@@ -30,7 +30,7 @@ public:
     int evaluateBoard(int player);
 
 private:
-    /**
+    int checkSlice(int row, int col, pair<int, int> incr); /**
      * @param row Row index of move
      * @param col Column index of move
      * @return (`row`, `col) within boundaries of the board
